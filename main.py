@@ -1,5 +1,6 @@
 import speech_recognition as sr
 import pyttsx3
+from scraper import getTasks
 import datetime
 import wikipedia
 import webbrowser
@@ -34,7 +35,7 @@ def takeCommand():
         return statement
 
 print("Loading your personal assistant PI")
-speak("Loading your personal assistant pie")
+speak("Loading your personal assistant pi")
 
 if __name__=='__main__':
 
@@ -49,5 +50,10 @@ if __name__=='__main__':
                     speak("Task number one is this and number two is that")
                     break
                 elif statement=='something':
-                    speak("Something")
+                    tasks = getTasks()
+                    print(tasks)
+                    for i in tasks:
+                        print(i)
+                    # speak(f'You have {len(tasks)} tasks')
+                    speak(tasks)
                     break

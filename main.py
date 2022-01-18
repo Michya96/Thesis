@@ -1,24 +1,20 @@
 import speech_recognition as sr
-import pyttsx3
+import gtts
+from playsound import playsound
 from scraper import getTasks
+from scraper import function_sound
 import datetime
 import wikipedia
-import webbrowser
-import os
+# import os
 import time
-import subprocess
-#from ecapture import ecapture as ec
-import wolframalpha
-import json
-import requests
 
-engine=pyttsx3.init('sapi5')
-voices=engine.getProperty('voices')
-engine.setProperty('voice','voices[0].id')
+
 
 def speak(text):
-    engine.say(text)
-    engine.runAndWait()
+    tts = gtts.gTTS(text, lang='en')
+    tts.save('C:/Users/michj/Desktop/hello.mp3')
+    function_sound()
+    # os.remove('C:/Users/michj/Desktop/hello.mp3')
 
 def takeCommand():
     r=sr.Recognizer()
@@ -44,16 +40,35 @@ if __name__=='__main__':
         statement = takeCommand().lower()
         if statement=='hello pi' or statement=='hello by' or statement=='hello pie' :
             speak("What can i do for you?")
-            while statement != 'stop':
+            while 'stop' not in statement:
                 statement = takeCommand().lower()
-                if statement=='read to-do list':
-                    speak("Task number one is this and number two is that")
-                    break
-                elif statement=='something':
+                if 'tasks' in statement:
                     tasks = getTasks()
-                    print(tasks)
+                    speak(f'You have {len(tasks)} tasks')
                     for i in tasks:
                         print(i)
-                    # speak(f'You have {len(tasks)} tasks')
-                    speak(tasks)
+                        speak(i)
                     break
+
+                elif 'date' in statement:
+                    date = datetime.datetime.now()
+                    print(f'{date}')
+                    break
+
+                elif 'time' in statement:
+                    time=datetime.datetime.now().strftime("%H:%M:%S")
+                    print(f'It is {time} right now')
+                    speak(f'It is {time} right now')
+                    break
+
+                elif 'what is' in statement:
+                    statement = statement.replace("what is", "")
+                    if statement == "":
+                        break
+                    results = wikipedia.summary(statement, sentences=3) 
+                    speak("According to Wikipedia")
+                    print(results)
+                    speak(results)
+                    break
+
+        
